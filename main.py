@@ -1,70 +1,64 @@
-import time
-import matplotlib.pyplot as plt
-import numpy as np
+import pygame
+pygame.init()
+color = "lightblue"
+exit=False
+WIDTH,HEIGHT=1000,700
+canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
+falling=False
+t0=0
+radius=50
+font=pygame.font.Font(None,int(radius/3))
+font1=pygame.font.Font(None,20)
+balls=[]
+image=pygame.image.load("Sonne.png")
+image2=pygame.image.load("Wolke.png")
+while not exit:
+    canvas.fill(color)
+    tick=pygame.time.get_ticks()
+    pygame.draw.line(canvas,"black",(10,0),(10,HEIGHT),5)
+    pygame.draw.polygon(canvas,"green",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
+    canvas.blit(image,dest=(WIDTH-300,50))
+    canvas.blit(image2,dest=(WIDTH/4,20))
+    for a in range(int(HEIGHT/100)):
+        if a==0:
+            text_surface=font1.render(str(a)+" Meter",True,("black"))
+            text_rect=text_surface.get_rect(center=(40,HEIGHT-10))
+            canvas.blit(text_surface,text_rect)
+        else:
+            text_surface=font1.render(str(a)+" Meter",True,("black"))
+            text_rect=text_surface.get_rect(center=(40,HEIGHT-a*100))
+            canvas.blit(text_surface,text_rect)
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            exit= True
+        if event.type==pygame.MOUSEBUTTONDOWN:
+            cor=pygame.mouse.get_pos()
+            balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
+        if event.type==pygame.VIDEORESIZE:
+            WIDTH,HEIGHT=event.w,event.h
+            canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
+            balls=[]
+    for ball in balls:
+        t=(tick-ball["t0"])/1000
+        y=ball["y0"]+0.5*981*t**2
+        x=ball["x0"]
+        if y>HEIGHT-radius:
+            y=HEIGHT-radius
+            if ball["t_land"] is None:
+                ball["t_land"]=tick
 
+        pygame.draw.circle(canvas,"blue",(int(x),int(y)),radius)
+        text_surface=font.render("Fallhöhe = "+str((HEIGHT-ball["y0"]-radius))+"cm",True,("red"))
+        text_rect=text_surface.get_rect(center=(int(x),int(y)))
+        canvas.blit(text_surface,text_rect)
 
-def tellme(s):
-    print(s)
-    plt.title(s, fontsize=16)
-    plt.draw()
+        if ball["t_land"] is not None:
+            fall_time=(ball["t_land"]-ball["t0"])/1000
+            text_surface=font.render("Fallzeit = "+f"{fall_time:.2f}s",True,("red"))
+            text_rect=text_surface.get_rect(center=(int(x),int(y)+15))
+            canvas.blit(text_surface,text_rect)
 
-plt.figure()
-plt.xlim(0, 1)
-plt.ylim(0, 1)
+            
+    pygame.display.update()
+    
 
-tellme('You will define a triangle, click to begin')
-
-plt.waitforbuttonpress()
-
-while True:
-    pts = []
-    while len(pts) < 3:
-        tellme('Select 3 corners with mouse')
-        pts = np.asarray(plt.ginput(3, timeout=-1))
-        if len(pts) < 3:
-            tellme('Too few points, starting over')
-            time.sleep(1)  # Wait a second
-
-    ph = plt.fill(pts[:, 0], pts[:, 1], 'r', lw=2)
-
-    tellme('Happy? Key click for yes, mouse click for no')
-
-    if plt.waitforbuttonpress():
-        break
-
-    # Get rid of fill
-    for p in ph:
-        p.remove()
-
-# Define a nice function of distance from individual pts
-def f(x, y, pts):
-    z = np.zeros_like(x)
-    for p in pts:
-        z = z + 1/(np.sqrt((x - p[0])**2 + (y - p[1])**2))
-    return 1/z
-
-
-X, Y = np.meshgrid(np.linspace(-1, 1, 51), np.linspace(-1, 1, 51))
-Z = f(X, Y, pts)
-
-CS = plt.contour(X, Y, Z, 20)
-
-tellme('Use mouse to select contour label locations, middle button to finish')
-CL = plt.clabel(CS, manual=True)
-
-tellme('Now do a nested zoom, click to begin')
-plt.waitforbuttonpress()
-
-while True:
-    tellme('Select two corners of zoom, middle mouse button to finish')
-    pts = plt.ginput(2, timeout=-1)
-    if len(pts) < 2:
-        break
-    (x0, y0), (x1, y1) = pts
-    xmin, xmax = sorted([x0, x1])
-    ymin, ymax = sorted([y0, y1])
-    plt.xlim(xmin, xmax)
-    plt.ylim(ymin, ymax)
-
-tellme('All Done!')
-plt.show()
