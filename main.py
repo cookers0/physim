@@ -34,6 +34,12 @@ while not exit:
         if event.type==pygame.MOUSEBUTTONDOWN:
             cor=pygame.mouse.get_pos()
             balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
+        if event.type==pygame.KEYDOWN:
+            if event.key==pygame.K_BACKSPACE:
+                if len(balls)>0:
+                     balls.pop(len(balls)-1)
+            if event.key==pygame.K_DELETE:
+                balls=[]
         if event.type==pygame.VIDEORESIZE:
             WIDTH,HEIGHT=event.w,event.h
             canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
