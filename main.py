@@ -19,7 +19,7 @@ while not exit:
     pygame.draw.polygon(canvas,"green",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
     canvas.blit(image,dest=(WIDTH-300,50))
     canvas.blit(image2,dest=(WIDTH/4,20))
-    for a in range(int(HEIGHT/100)):
+    for a in range(int((HEIGHT+99)/100)):
         if a==0:
             text_surface=font1.render(str(a)+" Meter",True,("black"))
             text_rect=text_surface.get_rect(center=(40,HEIGHT-10))
