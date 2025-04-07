@@ -32,8 +32,9 @@ while not exit:
         if event.type==pygame.QUIT:
             exit= True
         if event.type==pygame.MOUSEBUTTONDOWN:
-            cor=pygame.mouse.get_pos()
-            balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
+            if event.button==1:
+                cor=pygame.mouse.get_pos()
+                balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 if len(balls)>0:
@@ -60,7 +61,7 @@ while not exit:
 
         if ball["t_land"] is not None:
             fall_time=(ball["t_land"]-ball["t0"])/1000
-            text_surface=font.render("Fallzeit = "+f"{fall_time:.2f}s",True,("red"))
+            text_surface=font.render("Fallzeit = "+f"{fall_time:.3f}s",True,("red"))
             text_rect=text_surface.get_rect(center=(int(x),int(y)+15))
             canvas.blit(text_surface,text_rect)
 
