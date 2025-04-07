@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 pygame.init()
 color = "lightblue"
 exit=False
@@ -18,7 +19,14 @@ while not exit:
     pygame.draw.line(canvas,"black",(10,0),(10,HEIGHT),5)
     pygame.draw.polygon(canvas,"green",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
     canvas.blit(image,dest=(WIDTH-300,50))
-    canvas.blit(image2,dest=(WIDTH/4,20))
+    w=WIDTH*np.sin(tick/10000)
+    canvas.blit(image2,dest=(w,20))
+    if w>WIDTH-450:
+        color="lightblue3"
+        if w>WIDTH-200:
+            color="lightblue"
+    else:
+        color="lightblue"
     for a in range(int((HEIGHT+99)/100)):
         if a==0:
             text_surface=font1.render(str(a)+" Meter",True,("black"))
@@ -52,8 +60,7 @@ while not exit:
         if y>HEIGHT-radius:
             y=HEIGHT-radius
             if ball["t_land"] is None:
-                ball["t_land"]=tick
-
+                ball["t_land"]=tick              
         pygame.draw.circle(canvas,"blue",(int(x),int(y)),radius)
         text_surface=font.render("Fallhöhe = "+str((HEIGHT-ball["y0"]-radius))+"cm",True,("red"))
         text_rect=text_surface.get_rect(center=(int(x),int(y)))
