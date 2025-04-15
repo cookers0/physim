@@ -13,7 +13,26 @@ font1=pygame.font.Font(None,20)
 balls=[]
 image=pygame.image.load("Sonne.png")
 image2=pygame.image.load("Wolke.png")
+icon=pygame.image.load("IconSkaliert.png")
+pygame.display.set_icon(icon)
+d=0
+schnitt=0
+dd=0
+zschnitt=0
 while not exit:
+    pygame.display.set_caption("Fallende Bälle                       Anzahl Bälle: "
+                               +str(len(balls))+
+                               "   Durchschnittliche Fallhöhe: "
+                               +f"{schnitt:.2f}cm"
+                               +"    Durchschnittliche Fallzeit: "
+                               +f"{zschnitt:.3f}s")
+    if len(balls)>0:
+        schnitt=d/len(balls)
+        zschnitt=dd/len(balls)
+    else:
+        schnitt=0
+        zschnitt=0
+        
     canvas.fill(color)
     tick=pygame.time.get_ticks()
     pygame.draw.line(canvas,"black",(10,0),(10,HEIGHT),5)
@@ -43,16 +62,21 @@ while not exit:
             if event.button==1:
                 cor=pygame.mouse.get_pos()
                 balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
+                d+=HEIGHT-cor[1]
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 if len(balls)>0:
                      balls.pop(len(balls)-1)
             if event.key==pygame.K_DELETE:
                 balls=[]
+                d=0
+                dd=0
         if event.type==pygame.VIDEORESIZE:
             WIDTH,HEIGHT=event.w,event.h
             canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
             balls=[]
+            d=0
+            dd=0
     for ball in balls:
         t=(tick-ball["t0"])/1000
         y=ball["y0"]+0.5*981*t**2
@@ -60,7 +84,8 @@ while not exit:
         if y>HEIGHT-radius:
             y=HEIGHT-radius
             if ball["t_land"] is None:
-                ball["t_land"]=tick              
+                ball["t_land"]=tick 
+                dd+=(tick-ball["t0"])/1000             
         pygame.draw.circle(canvas,"blue",(int(x),int(y)),radius)
         text_surface=font.render("Fallhöhe = "+str((HEIGHT-ball["y0"]-radius))+"cm",True,("red"))
         text_rect=text_surface.get_rect(center=(int(x),int(y)))

@@ -7,15 +7,21 @@ pygame.init()
 exit=False
 WIDTH,HEIGHT=1000,800
 canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
+pygame.display.set_caption("Pendel")
 balls=[]
 g=981
 l=200
 font=pygame.font.Font(None,30)
+icon=pygame.image.load("IconSkaliert.png")
+pygame.display.set_icon(icon)
 while not exit:
     canvas.fill("white")
     if len(balls)>0:
         text_surface=font.render("Länge="+str(l)+"cm",True,"black")
         text_rect=text_surface.get_rect(center=(70,40))
+        canvas.blit(text_surface,text_rect)
+        text_surface=font.render("Anzahl Pendel: "+str(len(balls)),True,"black")
+        text_rect=text_surface.get_rect(center=(85,60))
         canvas.blit(text_surface,text_rect)
     tick=pygame.time.get_ticks()
     for event in pygame.event.get():
