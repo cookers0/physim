@@ -19,6 +19,7 @@ d=0
 schnitt=0
 dd=0
 zschnitt=0
+ic=0
 while not exit:
     pygame.display.set_caption("Fallende Bälle                       Anzahl Bälle: "
                                +str(len(balls))+
@@ -63,6 +64,9 @@ while not exit:
                 cor=pygame.mouse.get_pos()
                 balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
                 d+=HEIGHT-cor[1]
+            if event.button==3:
+                cor2=pygame.mouse.get_pos()
+                ic+=1
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 if len(balls)>0:
@@ -77,6 +81,10 @@ while not exit:
             balls=[]
             d=0
             dd=0
+    if ic%2 !=0 :
+        text_surface=font1.render("Delete drücken um Bälle zu löschen",True,("black"))
+        text_rect=text_surface.get_rect(center=(cor2))
+        canvas.blit(text_surface,text_rect)
     for ball in balls:
         t=(tick-ball["t0"])/1000
         y=ball["y0"]+0.5*981*t**2
