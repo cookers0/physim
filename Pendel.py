@@ -14,6 +14,7 @@ l=200
 font=pygame.font.Font(None,30)
 icon=pygame.image.load("IconSkaliert.png")
 pygame.display.set_icon(icon)
+ic=0
 while not exit:
     canvas.fill("white")
     if len(balls)>0:
@@ -31,10 +32,15 @@ while not exit:
             if event.button==1:
                 cor=pygame.mouse.get_pos()
                 balls.append({"x0":cor[0],"y0":cor[1],"t0":tick})
+            if event.button==3:
+                cor2=pygame.mouse.get_pos()
+                ic+=1
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 if len(balls)>0:
                     balls.pop(len(balls)-1)
+            if event.key==pygame.K_DELETE:
+                balls=[]
             if event.key==pygame.K_LEFT:
                 if l>10:
                     l=l-10
@@ -43,6 +49,13 @@ while not exit:
         if event.type==pygame.VIDEORESIZE:
             WIDTH=event.w
             HEIGHT=event.h   
+    if ic%2 !=0 :
+        text_surface=font.render("Delete drücken um Pendel zu löschen",True,("black"))
+        text_rect=text_surface.get_rect(center=(cor2))
+        canvas.blit(text_surface,text_rect)
+        text_surface=font.render("Zurück drücken um letztes Pendel zu löschen",True,("black"))
+        text_rect=text_surface.get_rect(center=(cor2[0],cor2[1]+30))
+        canvas.blit(text_surface,text_rect)
     for ball in balls:
         u=np.sqrt(g/l)*(tick-ball["t0"])/900
         k=0.4

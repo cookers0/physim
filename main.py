@@ -85,6 +85,9 @@ while not exit:
         text_surface=font1.render("Delete drücken um Bälle zu löschen",True,("black"))
         text_rect=text_surface.get_rect(center=(cor2))
         canvas.blit(text_surface,text_rect)
+        text_surface=font1.render("Zurück drücken um letzten Ball zu löschen",True,("black"))
+        text_rect=text_surface.get_rect(center=(cor2[0],cor2[1]+30))
+        canvas.blit(text_surface,text_rect)
     for ball in balls:
         t=(tick-ball["t0"])/1000
         y=ball["y0"]+0.5*981*t**2
