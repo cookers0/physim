@@ -7,9 +7,10 @@ WIDTH,HEIGHT=1000,700
 canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
 falling=False
 t0=0
-radius=50
+radius=60
 font=pygame.font.Font(None,int(radius/3))
 font1=pygame.font.Font(None,20)
+font2=pygame.font.SysFont("arial",20)
 balls=[]
 image=pygame.image.load("Sonne.png")
 image2=pygame.image.load("Wolke.png")
@@ -37,7 +38,7 @@ while not exit:
     canvas.fill(color)
     tick=pygame.time.get_ticks()
     pygame.draw.line(canvas,"black",(10,0),(10,HEIGHT),5)
-    pygame.draw.polygon(canvas,"green",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
+    pygame.draw.polygon(canvas,"chartreuse4",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
     canvas.blit(image,dest=(WIDTH-300,50))
     w=WIDTH*np.sin(tick/10000)
     canvas.blit(image2,dest=(w,20))
@@ -82,10 +83,10 @@ while not exit:
             d=0
             dd=0
     if ic%2 !=0 :
-        text_surface=font1.render("Delete drücken um Bälle zu löschen",True,("black"))
+        text_surface=font2.render("Delete drücken um Bälle zu löschen",True,("black"))
         text_rect=text_surface.get_rect(center=(cor2))
         canvas.blit(text_surface,text_rect)
-        text_surface=font1.render("Zurück drücken um letzten Ball zu löschen",True,("black"))
+        text_surface=font2.render("Zurück drücken um letzten Ball zu löschen",True,("black"))
         text_rect=text_surface.get_rect(center=(cor2[0],cor2[1]+30))
         canvas.blit(text_surface,text_rect)
     for ball in balls:
@@ -95,7 +96,7 @@ while not exit:
         if y>HEIGHT-radius:
             y=HEIGHT-radius
             if ball["t_land"] is None:
-                ball["t_land"]=tick 
+                ball["t_land"]=tick
                 dd+=(tick-ball["t0"])/1000             
         pygame.draw.circle(canvas,"blue",(int(x),int(y)),radius)
         text_surface=font.render("Fallhöhe = "+str((HEIGHT-ball["y0"]-radius))+"cm",True,("red"))
@@ -110,5 +111,4 @@ while not exit:
 
             
     pygame.display.update()
-    
 
