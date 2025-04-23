@@ -11,8 +11,8 @@ pygame.display.set_caption("Pendel")
 balls=[]
 g=981
 l=200
-font=pygame.font.Font(None,30)
-font1=pygame.font.Font(None,20)
+font=pygame.font.SysFont("arial",25)
+font1=pygame.font.SysFont("arial",20)
 icon=pygame.image.load("IconSkaliert.png")
 pygame.display.set_icon(icon)
 ic=0
@@ -22,13 +22,13 @@ while not exit:
     canvas.fill("white")
     if len(balls)>0:
         text_surface=font.render("Länge="+str(l)+"cm",True,"black")
-        text_rect=text_surface.get_rect(center=(90,40))
+        text_rect=text_surface.get_rect(center=(95,40))
         canvas.blit(text_surface,text_rect)
         text_surface=font.render("Anzahl Pendel: "+str(len(balls)),True,"black")
         text_rect=text_surface.get_rect(center=(105,60))
         canvas.blit(text_surface,text_rect)
         text_surface=font.render("Auslenkungswinkel: "+str(thetag)+"°",True,"black")
-        text_rect=text_surface.get_rect(center=(140,80))
+        text_rect=text_surface.get_rect(center=(135,80))
         canvas.blit(text_surface,text_rect)
     tick=pygame.time.get_ticks()
     for event in pygame.event.get():
@@ -64,6 +64,8 @@ while not exit:
             WIDTH=event.w
             HEIGHT=event.h   
     if ic%2 !=0 :
+        r=pygame.Rect(cor2[0]-200,cor2[1]-50,400,250)
+        pygame.draw.rect(canvas,"grey90",r,0)
         text_surface=font1.render("Delete drücken um Pendel zu löschen",True,("black"))
         text_rect=text_surface.get_rect(center=(cor2))
         canvas.blit(text_surface,text_rect)
