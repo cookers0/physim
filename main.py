@@ -1,7 +1,7 @@
 import pygame
 from Menu import Menu
 from Gravitation import Simulation1
-from test import Simulation2
+from Pendel import Simulation2
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
