@@ -1,114 +1,41 @@
 import pygame
-import numpy as np
+from Menu import Menu
+from Gravitation import Simulation1
+from test import Simulation2
+
 pygame.init()
-color = "lightblue"
-exit=False
-WIDTH,HEIGHT=1000,700
-canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
-falling=False
-t0=0
-radius=60
-font=pygame.font.Font(None,int(radius/3))
-font1=pygame.font.Font(None,20)
-font2=pygame.font.SysFont("arial",20)
-balls=[]
-image=pygame.image.load("Sonne.png")
-image2=pygame.image.load("Wolke.png")
+screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
 icon=pygame.image.load("IconSkaliert.png")
 pygame.display.set_icon(icon)
-d=0
-schnitt=0
-dd=0
-zschnitt=0
-ic=0
-while not exit:
-    pygame.display.set_caption("Fallende Bälle                       Anzahl Bälle: "
-                               +str(len(balls))+
-                               "   Durchschnittliche Fallhöhe: "
-                               +f"{schnitt:.2f}cm"
-                               +"    Durchschnittliche Fallzeit: "
-                               +f"{zschnitt:.3f}s")
-    if len(balls)>0:
-        schnitt=d/len(balls)
-        zschnitt=dd/len(balls)
-    else:
-        schnitt=0
-        zschnitt=0
-        
-    canvas.fill(color)
-    tick=pygame.time.get_ticks()
-    pygame.draw.line(canvas,"black",(10,0),(10,HEIGHT),5)
-    pygame.draw.polygon(canvas,"chartreuse4",[(0,HEIGHT),(100,HEIGHT-100),(WIDTH,HEIGHT-100),(WIDTH,HEIGHT)])
-    canvas.blit(image,dest=(WIDTH-300,50))
-    w=WIDTH*np.sin(tick/10000)
-    canvas.blit(image2,dest=(w,20))
-    if w>WIDTH-450:
-        color="lightblue3"
-        if w>WIDTH-200:
-            color="lightblue"
-    else:
-        color="lightblue"
-    for a in range(int((HEIGHT+99)/100)):
-        if a==0:
-            text_surface=font1.render(str(a)+" Meter",True,("black"))
-            text_rect=text_surface.get_rect(center=(40,HEIGHT-10))
-            canvas.blit(text_surface,text_rect)
-        else:
-            text_surface=font1.render(str(a)+" Meter",True,("black"))
-            text_rect=text_surface.get_rect(center=(40,HEIGHT-a*100))
-            canvas.blit(text_surface,text_rect)
+
+# States
+menu = Menu(screen)
+simulations = {
+    "Gravitation": Simulation1(screen),
+    "Pendel": Simulation2(screen),
+}
+current_scene = "menu"
+
+running = True
+while running:
     for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            exit= True
-        if event.type==pygame.MOUSEBUTTONDOWN:
-            if event.button==1:
-                cor=pygame.mouse.get_pos()
-                balls.append({"y0":cor[1]-radius,"t0":tick,"x0":cor[0],"t_land":None})
-                d+=HEIGHT-cor[1]
-            if event.button==3:
-                cor2=pygame.mouse.get_pos()
-                ic+=1
-        if event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_BACKSPACE:
-                if len(balls)>0:
-                     balls.pop(len(balls)-1)
-            if event.key==pygame.K_DELETE:
-                balls=[]
-                d=0
-                dd=0
-        if event.type==pygame.VIDEORESIZE:
-            WIDTH,HEIGHT=event.w,event.h
-            canvas=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
-            balls=[]
-            d=0
-            dd=0
-    if ic%2 !=0 :
-        text_surface=font2.render("Delete drücken um Bälle zu löschen",True,("black"))
-        text_rect=text_surface.get_rect(center=(cor2))
-        canvas.blit(text_surface,text_rect)
-        text_surface=font2.render("Zurück drücken um letzten Ball zu löschen",True,("black"))
-        text_rect=text_surface.get_rect(center=(cor2[0],cor2[1]+30))
-        canvas.blit(text_surface,text_rect)
-    for ball in balls:
-        t=(tick-ball["t0"])/1000
-        y=ball["y0"]+0.5*981*t**2
-        x=ball["x0"]
-        if y>HEIGHT-radius:
-            y=HEIGHT-radius
-            if ball["t_land"] is None:
-                ball["t_land"]=tick
-                dd+=(tick-ball["t0"])/1000             
-        pygame.draw.circle(canvas,"blue",(int(x),int(y)),radius)
-        text_surface=font.render("Fallhöhe = "+str((HEIGHT-ball["y0"]-radius))+"cm",True,("red"))
-        text_rect=text_surface.get_rect(center=(int(x),int(y)))
-        canvas.blit(text_surface,text_rect)
+        if event.type == pygame.QUIT:
+            running = False
 
-        if ball["t_land"] is not None:
-            fall_time=(ball["t_land"]-ball["t0"])/1000
-            text_surface=font.render("Fallzeit = "+f"{fall_time:.3f}s",True,("red"))
-            text_rect=text_surface.get_rect(center=(int(x),int(y)+15))
-            canvas.blit(text_surface,text_rect)
+    screen.fill((0, 0, 0))
 
-            
-    pygame.display.update()
+    if current_scene == "menu":
+        selected = menu.run(event)
+        if selected in simulations:
+            current_scene = selected
+    else:
+        sim = simulations[current_scene]
+        back_to_menu = sim.run(event)
+        if back_to_menu:
+            current_scene = "menu"
 
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
