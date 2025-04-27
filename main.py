@@ -16,24 +16,33 @@ simulations = {
     "Pendel": Simulation2(screen),
 }
 current_scene = "menu"
+cdtransition = 0
 
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if cdtransition == 0:
+            if current_scene == "menu":
+                selected = menu.run(event)
+                if selected in simulations:
+                    current_scene = selected
+                    cdtransition = 15
 
     screen.fill((0, 0, 0))
 
     if current_scene == "menu":
-        selected = menu.run(event)
-        if selected in simulations:
-            current_scene = selected
+        menu.run(None)
     else:
-        sim = simulations[current_scene]
-        back_to_menu = sim.run(event)
-        if back_to_menu:
-            current_scene = "menu"
+        if cdtransition == 0:
+            back_to_menu = simulations[current_scene].run(event)
+            if back_to_menu:
+                current_scene = "menu"
+                cdtransition = 15
+
+    if cdtransition > 0:
+        cdtransition -= 1
 
     pygame.display.flip()
     clock.tick(60)
