@@ -31,7 +31,7 @@ class Simulation1:
         if keys[pygame.K_ESCAPE]:
             return True
 
-        pygame.display.set_caption("Gravitation                       Anzahl Bälle: "
+        pygame.display.set_caption("PyPhySim - Gravitation                       Anzahl Bälle: "
                                +str(len(self.balls))+
                                "   Durchschnittliche Fallhöhe: "
                                +f"{self.schnitt:.2f}cm"

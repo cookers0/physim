@@ -7,7 +7,6 @@ class Simulation2:
         self.screen = screen
         self.WIDTH,self.HEIGHT=1000,800
         self.canvas=pygame.display.set_mode((self.WIDTH,self.HEIGHT),pygame.RESIZABLE)
-        pygame.display.set_caption("Pendel")
         self.balls=[]
         self.g=981
         self.l=200
@@ -22,6 +21,7 @@ class Simulation2:
         self.cdconfig=0
 
     def run(self, event):
+        pygame.display.set_caption("PyPhySim - Pendel")
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
             return True
@@ -107,16 +107,16 @@ class Simulation2:
             text_surface=self.font1.render("Zurück drücken um letztes Pendel zu löschen",True,("black"))
             text_rect=text_surface.get_rect(center=(self.cor2[0],self.cor2[1]+30))
             self.canvas.blit(text_surface,text_rect)
-            text_surface=self.font1.render("Pfeiltaste Links um Auslenkungswinkel zu verkleinern",True,("black"))
+            text_surface=self.font1.render("Pfeiltaste Links um Auslenkungswinkel zu vergrössern",True,("black"))
             text_rect=text_surface.get_rect(center=(self.cor2[0],self.cor2[1]+60))
             self.canvas.blit(text_surface,text_rect)
-            text_surface=self.font1.render("Pfeiltaste Rechts um Auslenkungswinkel zu vergrössern",True,("black"))
+            text_surface=self.font1.render("Pfeiltaste Rechts um Auslenkungswinkel zu verkleinern",True,("black"))
             text_rect=text_surface.get_rect(center=(self.cor2[0],self.cor2[1]+90))
             self.canvas.blit(text_surface,text_rect)
-            text_surface=self.font1.render("Pfeiltaste Oben um Länge zu erhöhen",True,("black"))
+            text_surface=self.font1.render("Pfeiltaste Oben um Länge zu verkleinern",True,("black"))
             text_rect=text_surface.get_rect(center=(self.cor2[0],self.cor2[1]+120))
             self.canvas.blit(text_surface,text_rect)
-            text_surface=self.font1.render("Pfeiltaste Unten um Länge zu verkleinern",True,("black"))
+            text_surface=self.font1.render("Pfeiltaste Unten um Länge zu vergrössern",True,("black"))
             text_rect=text_surface.get_rect(center=(self.cor2[0],self.cor2[1]+150))
             self.canvas.blit(text_surface,text_rect)
             

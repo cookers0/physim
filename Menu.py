@@ -8,6 +8,7 @@ class Menu:
         self.hover_index = 0
 
     def run(self, event):
+        pygame.display.set_caption("PyPhySim - Menü")
         keys = pygame.key.get_pressed()
         if keys[pygame.K_DOWN]:
             self.hover_index = (self.hover_index + 1) % len(self.options)
