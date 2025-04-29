@@ -27,6 +27,9 @@ class Simulation1:
         self.cdtext=0
     
     def run(self, event):
+
+        self.WIDTH, self.HEIGHT = self.canvas.get_size()
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
             return True
@@ -107,13 +110,6 @@ class Simulation1:
 
         if self.cddel > 0:
             self.cddel -= 1
-
-        if event.type==pygame.VIDEORESIZE:
-            self.WIDTH,self.HEIGHT=event.w,event.h
-            self.canvas=pygame.display.set_mode((self.WIDTH,self.HEIGHT),pygame.RESIZABLE)
-            self.balls=[]
-            self.d=0
-            self.dd=0
 
         for ball in self.balls:
             t=(tick-ball["t0"])/1000

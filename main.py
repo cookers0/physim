@@ -44,7 +44,7 @@ while running:
     if cdtransition > 0:
         cdtransition -= 1
 
-    pygame.display.flip()
+    pygame.display.update()
     clock.tick(60)
 
 pygame.quit()
