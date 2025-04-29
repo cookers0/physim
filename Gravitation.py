@@ -27,9 +27,7 @@ class Simulation1:
         self.cdtext=0
     
     def run(self, event):
-
         self.WIDTH, self.HEIGHT = self.canvas.get_size()
-
         keys = pygame.key.get_pressed()
         if keys[pygame.K_ESCAPE]:
             return True
@@ -74,7 +72,8 @@ class Simulation1:
                 if self.cdball == 0:
                     self.cdball = 20
                     cor=pygame.mouse.get_pos()
-                    self.balls.append({"y0":cor[1]-self.radius,"t0":tick,"x0":cor[0],"t_land":None})
+                    fall_height=self.HEIGHT-cor[1]
+                    self.balls.append({"y0":cor[1]-self.radius,"fall_height": fall_height,"t0":tick,"x0":cor[0],"t_land":None})
                     self.d+=self.HEIGHT-cor[1]
             if event.button==3:
                 if self.cdtext == 0:
@@ -111,6 +110,11 @@ class Simulation1:
         if self.cddel > 0:
             self.cddel -= 1
 
+        if event.type==pygame.VIDEORESIZE:
+            self.balls=[]
+            self.d=0
+            self.dd=0
+
         for ball in self.balls:
             t=(tick-ball["t0"])/1000
             y=ball["y0"]+0.5*981*t**2
@@ -121,7 +125,7 @@ class Simulation1:
                     ball["t_land"]=tick
                     self.dd+=(tick-ball["t0"])/1000             
             pygame.draw.circle(self.canvas,"blue",(int(x),int(y)),self.radius)
-            text_surface=self.font.render("Fallhöhe = "+str((self.HEIGHT-ball["y0"]-self.radius))+"cm",True,("red"))
+            text_surface=self.font.render("Fallhöhe = "+str(ball["fall_height"])+"cm",True,("red"))
             text_rect=text_surface.get_rect(center=(int(x),int(y)))
             self.canvas.blit(text_surface,text_rect)
 
@@ -131,5 +135,4 @@ class Simulation1:
                 text_rect=text_surface.get_rect(center=(int(x),int(y)+15))
                 self.canvas.blit(text_surface,text_rect)
         
-        pygame.display.update()
         return False
